@@ -22,7 +22,7 @@ message CreateClientReq {
 // CreateClientResp returns the response from creating a client.
 message CreateClientResp {
   bool already_exists = 1;
-  Client client = 2; 
+  Client client = 2;
 }
 
 // DeleteClientReq is a request to delete a client.
@@ -31,7 +31,7 @@ message DeleteClientReq {
   string id = 1;
 }
 
-// DeleteClientResp determines if the client is deleted successfully. 
+// DeleteClientResp determines if the client is deleted successfully.
 message DeleteClientResp {
   bool not_found = 1;
 }
@@ -48,6 +48,14 @@ message UpdateClientReq {
 // UpdateClientResp returns the reponse form updating a client.
 message UpdateClientResp {
     bool not_found = 1;
+}
+
+// ListClientReq is the request for getting a list of clients.
+message ListClientReq { }
+
+// ListClientResp is the response containing a list of clients.
+message ListClientResp {
+  repeated Client clients = 1;
 }
 
 // TODO(ericchiang): expand this.
@@ -80,7 +88,7 @@ message UpdatePasswordReq {
   string new_username = 3;
 }
 
-// UpdatePasswordResp returns the response from modifying an existing password. 
+// UpdatePasswordResp returns the response from modifying an existing password.
 message UpdatePasswordResp {
   bool not_found = 1;
 }
@@ -90,7 +98,7 @@ message DeletePasswordReq {
   string email = 1;
 }
 
-// DeletePasswordResp returns the response from deleting a password. 
+// DeletePasswordResp returns the response from deleting a password.
 message DeletePasswordResp {
   bool not_found = 1;
 }
@@ -142,7 +150,7 @@ message RevokeRefreshReq {
   string client_id = 2;
 }
 
-// RevokeRefreshResp determines if the refresh token is revoked successfully. 
+// RevokeRefreshResp determines if the refresh token is revoked successfully.
 message RevokeRefreshResp {
   // Set to true is refresh token was not found and token could not be revoked.
   bool not_found = 1;
@@ -166,6 +174,8 @@ service Dex {
   rpc UpdateClient(UpdateClientReq) returns (UpdateClientResp) {};
   // DeleteClient deletes the provided client.
   rpc DeleteClient(DeleteClientReq) returns (DeleteClientResp) {};
+  // ListClients lists all client entries.
+  rpc ListClients(ListClientReq) returns (ListClientResp) {};
   // CreatePassword creates a password.
   rpc CreatePassword(CreatePasswordReq) returns (CreatePasswordResp) {};
   // UpdatePassword modifies existing password.

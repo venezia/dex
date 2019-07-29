@@ -122,6 +122,34 @@ func (d dexAPI) DeleteClient(ctx context.Context, req *api.DeleteClientReq) (*ap
 	return &api.DeleteClientResp{}, nil
 }
 
+func (d dexAPI) ListClients(ctx context.Context, req *api.ListClientReq) (*api.ListClientResp, error) {
+	clientList, err := d.s.ListClients()
+	if err != nil {
+		d.logger.Errorf("api: failed to list clients: %v", err)
+		return nil, fmt.Errorf("list clients: %v", err)
+	}
+
+	var clients []*api.Client
+	for _, client := range clientList {
+		c := api.Client{
+			Id:    client.ID,
+			Secret: client.Secret,
+			RedirectUris: client.RedirectURIs,
+			TrustedPeers: client.TrustedPeers,
+			Public:   client.Public,
+			Name: client.Name,
+			LogoUrl: client.LogoURL,
+		}
+		clients = append(clients, &c)
+	}
+
+	return &api.ListClientResp{
+		Clients: clients,
+	}, nil
+
+}
+
+
 // checkCost returns an error if the hash provided does not meet lower or upper
 // bound cost requirements.
 func checkCost(hash []byte) error {
