@@ -62,6 +62,7 @@ docker-image:
 proto: bin/protoc bin/protoc-gen-go
 	@./bin/protoc --go_out=plugins=grpc:. --plugin=protoc-gen-go=./bin/protoc-gen-go api/*.proto
 	@./bin/protoc --go_out=. --plugin=protoc-gen-go=./bin/protoc-gen-go server/internal/*.proto
+	@./bin/protoc --go_out=plugins=grpc:. --plugin=protoc-gen-go=./bin/protoc-gen-go api/v1alpha1/*.proto
 
 .PHONY: verify-proto
 verify-proto: proto

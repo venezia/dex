@@ -6,6 +6,7 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
+	"google.golang.org/grpc/reflection"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -23,8 +24,10 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"github.com/dexidp/dex/api"
+	"github.com/dexidp/dex/api/v1alpha1"
 	"github.com/dexidp/dex/pkg/log"
 	"github.com/dexidp/dex/server"
+	v1alpha1server "github.com/dexidp/dex/server/api/v1alpha1"
 	"github.com/dexidp/dex/storage"
 )
 
@@ -281,6 +284,7 @@ func serve(cmd *cobra.Command, args []string) error {
 				}
 				s := grpc.NewServer(grpcOptions...)
 				api.RegisterDexServer(s, server.NewAPI(serverConfig.Storage, logger))
+				v1alpha1.RegisterDexServer(s, v1alpha1server.NewAPI(serverConfig.Storage, logger))
 				grpcMetrics.InitializeMetrics(s)
 				err = s.Serve(list)
 				return fmt.Errorf("listening on %s failed: %v", c.GRPC.Addr, err)
